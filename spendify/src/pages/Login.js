@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Button } from "@cred/neopop-web/lib/components";
 const SignIn = () => {
   return (
     <div style={styles.container}>
@@ -7,7 +7,7 @@ const SignIn = () => {
       <form style={styles.form}>
         <input type="email" placeholder="Email" style={styles.input} />
         <input type="password" placeholder="Password" style={styles.input} />
-        <button type="submit" style={styles.button}>Sign In</button>
+        <Button type="submit" >Sign In</Button>
       </form>
     </div>
   );
@@ -31,14 +31,7 @@ const styles = {
     borderRadius: "4px",
     border: "1px solid #ccc",
   },
-  button: {
-    padding: "0.5rem 1rem",
-    backgroundColor: "#007bff",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
+  
 };
 
 export default SignIn;
