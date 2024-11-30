@@ -1,5 +1,5 @@
 import React from "react";
-import { Header, Button,Back } from "@cred/neopop-web/lib/components";
+import { Header, Button} from "@cred/neopop-web/lib/components";
 
 
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,7 @@ const HeaderComp = () => {
           variant="secondary"
           onClick={() => navigate("/signin")}
         >
-          Login
+          Sign In
         </Button>
         <Button
           colorConfig={buttonColorConfig}
