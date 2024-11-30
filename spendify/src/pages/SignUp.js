@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/signup.css";
+import Dashboard from "./Dashboard";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +13,8 @@ const SignUp = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [showTooltip, setShowTooltip] = useState(false);
+
+  const navigate = useNavigate(); // Hook to programmatically navigate
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,10 +54,14 @@ const SignUp = () => {
       if (response.ok) {
         const result = await response.json();
         setMessage("User registered successfully!");
-        setErrorMessage(""); // Clear any previous error message
-        setFormData({ username: "", email: "", password: "" }); // Clear fields
-        setPasswordStrength(0); // Reset password strength
-        console.log("Success:", result);
+        setErrorMessage("");
+        setFormData({ username: "", email: "", password: "" });
+        setPasswordStrength(0);
+
+        // Redirect to dashboard after successful signup
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 2000); // Optional delay to show success message
       } else {
         const error = await response.json();
         if (error.detail) {
@@ -68,11 +77,9 @@ const SignUp = () => {
         } else {
           setErrorMessage("An unexpected error occurred.");
         }
-        console.error("Error:", error);
       }
     } catch (error) {
       setErrorMessage("An unexpected error occurred.");
-      console.error("Unexpected error:", error);
     }
   };
 
@@ -90,18 +97,18 @@ const SignUp = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <div className="container">
       <h2>Sign Up</h2>
-      {message && <p style={styles.success}>{message}</p>}
-      {errorMessage && <p style={styles.error}>{errorMessage}</p>}
-      <form style={styles.form} onSubmit={handleSubmit}>
+      {message && <p className="success">{message}</p>}
+      {errorMessage && <p className="error">{errorMessage}</p>}
+      <form className="form" onSubmit={handleSubmit}>
         <input
           type="text"
           name="username"
           placeholder="Username"
           value={formData.username}
           onChange={handleChange}
-          style={styles.input}
+          className="input"
           required
         />
         <input
@@ -110,45 +117,45 @@ const SignUp = () => {
           placeholder="Email"
           value={formData.email}
           onChange={handleChange}
-          style={styles.input}
+          className="input"
           required
         />
-        <div style={styles.passwordContainer}>
+        <div className="password-container">
           <input
             type="password"
             name="password"
             placeholder="Password"
             value={formData.password}
             onChange={handleChange}
-            style={styles.passwordInput}
+            className="password-input"
             required
           />
           <button
             type="button"
-            style={styles.infoButton}
+            className="info-button"
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
           >
             i
           </button>
           {showTooltip && (
-            <div style={styles.tooltip}>
+            <div className="tooltip">
               Password must be at least 8 characters long, contain at least one
               letter, and one number.
             </div>
           )}
         </div>
-        <div style={styles.passwordStrength}>
+        <div className="password-strength">
           <div
+            className="strength-bar"
             style={{
-              ...styles.strengthBar,
               width: `${passwordStrength * 33.33}%`,
               backgroundColor: getBarColor(passwordStrength),
             }}
           />
-          <p style={styles.strengthLabel}>{getStrengthLabel()}</p>
+          <p className="strength-label">{getStrengthLabel()}</p>
         </div>
-        <button type="submit" style={styles.button}>
+        <button type="submit" className="button">
           Sign Up
         </button>
       </form>
@@ -167,100 +174,6 @@ const getBarColor = (strength) => {
     default:
       return "#ccc";
   }
-};
-
-const styles = {
-  container: {
-    textAlign: "center",
-    padding: "2rem",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  input: {
-    margin: "0.5rem 0",
-    padding: "0.5rem",
-    width: "80%",
-    maxWidth: "300px",
-    borderRadius: "4px",
-    border: "1px solid #ccc",
-  },
-  passwordContainer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "80%",
-    maxWidth: "300px",
-    position: "relative",
-    margin: "0.5rem 0",
-  },
-  passwordInput: {
-    flex: "1",
-    padding: "0.5rem",
-    borderRadius: "4px",
-    border: "1px solid #ccc",
-  },
-  infoButton: {
-    marginLeft: "0.5rem",
-    padding: "0.2rem 0.5rem",
-    backgroundColor: "#007bff",
-    color: "#fff",
-    border: "none",
-    borderRadius: "50%",
-    cursor: "pointer",
-    fontSize: "0.8rem",
-    height: "100%",
-  },
-  tooltip: {
-    position: "absolute",
-    top: "-40px",
-    left: "50%",
-    transform: "translateX(-50%)",
-    padding: "0.5rem",
-    backgroundColor: "#333",
-    color: "#fff",
-    borderRadius: "4px",
-    fontSize: "0.8rem",
-    zIndex: 1,
-    width: "250px",
-    textAlign: "center",
-  },
-  passwordStrength: {
-    margin: "0.5rem 0",
-    width: "80%",
-    maxWidth: "300px",
-    textAlign: "left",
-  },
-  strengthBar: {
-    height: "10px",
-    borderRadius: "4px",
-    backgroundColor: "#ccc",
-  },
-  strengthLabel: {
-    marginTop: "0.5rem",
-    fontSize: "0.9rem",
-  },
-  button: {
-    marginTop: "1rem",
-    padding: "0.5rem 1rem",
-    backgroundColor: "#007bff",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
-  success: {
-    color: "green",
-    fontSize: "1rem",
-    marginBottom: "1rem",
-  },
-  error: {
-    color: "red",
-    fontSize: "1rem",
-    marginBottom: "1rem",
-  },
 };
 
 export default SignUp;
